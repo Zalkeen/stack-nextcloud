@@ -1,0 +1,21 @@
+version: '3'
+services:
+  db:
+    image: mariadb
+    restart: always
+    volumes:
+      - ${NEXTCLOUD_VOLUME_DB:-./db}:/var/lib/mysql:Z
+    environment:
+      - MYSQL_ROOT_PASSWORD=${NEXTCLOUD_DB_ROOTPW:-changemequickly}
+      - MYSQL_PASSWORD=${NEXTCLOUD_DB_PW:-changeme}
+      - MYSQL_DATABASE=${NEXTCLOUD_DB_NAME:-nextcloud}
+      - MYSQL_USER=${NEXTCLOUD_DB_USER:-nextcloud}
+  nextcloud:
+    image: nextcloud
+    ports:
+      - ${NEXTCLOUD_PORT:-8080}:80
+    volumes:
+      - ${NEXTCLOUD_VOLUME_DATA:-./data}:/var/www/html/data
+      - ${NEXTCLOUD_VOLUME_CONFIG:-./config}:/var/www/html/config
+      - ${NEXTCLOUD_VOLUME_APPS:-./apps}:/var/www/html/apps
+    restart: always
